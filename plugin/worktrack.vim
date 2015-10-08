@@ -7,6 +7,12 @@
 "      * <2015-01-12 Mon>
 "      ** TASK [0%]: <pointer placed here>
 " ------------
+
+" Do not load the plugin twice
+if exists('g:vim_worktrack')
+    finish
+endif
+
 let g:default_filename = "worktrack.org"
 let s:filename = expand('%:t')
 
@@ -41,3 +47,5 @@ endfunction
 
 " Custom save.
 au BufWritePost * call AppendTimestamp()
+
+let g:vim_worktrack = 1
