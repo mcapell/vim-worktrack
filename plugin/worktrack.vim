@@ -4,18 +4,27 @@
 " ------------
 " Work Journal
 "  ts: Writes a timestamp and creates a task:
-"      * 2015-01-12 Mon 12:09 PM
+"      * <2015-01-12 Mon>
 "      ** TASK [0%]: <pointer placed here>
 " ------------
 let g:default_filename = "worktrack.org"
 let s:filename = expand('%:t')
+
+function AddHeaderAndTask()
+    set paste
+    :normal localOrgTS
+    :normal o** TASK [0%]:
+    set nopaste
+endfunction
+
 
 " Only load the functionality on the configured filename.
 if s:filename == g:default_filename
     " Remove the autocomment (usefull for Python) on new lines.
     autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
 
-    nmap ts i<C-R>=strftime("\r* %Y-%m-%d %a %I:%M %p\r** TASK [0%%]: ")<CR>
+    nmap localOrgTS o<C-R>=strftime("* <%Y-%m-%d %a>")<ESC>
+    nmap ts :call AddHeaderAndTask()<CR><S-A><SPACE>
 endif
 
 
