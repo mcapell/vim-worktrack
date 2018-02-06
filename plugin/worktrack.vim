@@ -13,13 +13,19 @@ if exists('g:vim_worktrack')
     finish
 endif
 
-let g:default_filename = "worktrack.org"
+let g:default_filename = "Worktrack.wiki"
 let s:filename = expand('%:t')
 
 function AddHeaderAndTask()
     set paste
     :normal localOrgTS
-    :normal o** TASK [0%]:
+    :normal o* [ ]
+    set nopaste
+endfunction
+
+function AddTask()
+    set paste
+    :normal i* [ ]
     set nopaste
 endfunction
 
@@ -29,8 +35,9 @@ if s:filename == g:default_filename
     " Remove the autocomment (usefull for Python) on new lines.
     autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
 
-    nmap localOrgTS o<C-R>=strftime("* <%Y-%m-%d %a>")<ESC>
-    nmap ts :call AddHeaderAndTask()<CR><S-A><SPACE>
+    nmap localOrgTS i<C-R>=strftime("= %Y-%m-%d %a =")<ESC>
+    nmap <leader>ts :call AddHeaderAndTask()<CR><S-A><SPACE>
+    nmap <leader>tk :call AddTask()<CR><S-A><SPACE>
 endif
 
 
@@ -39,7 +46,8 @@ endif
 " -----------------------
 
 let s:plugindir = expand('<sfile>:p:h:h')
-let s:pluginscript = s:plugindir . "/tools/append_timestamp.sh " . s:plugindir . "/data/worktrack_ts.txt"
+let g:worktrack_timestamp_file = s:plugindir . "/data/worktrack_ts.txt"
+let s:pluginscript = s:plugindir . "/tools/append_timestamp.sh " . worktrack_timestamp_file
 
 function AppendTimestamp()
     execute "silent !. ".s:pluginscript
